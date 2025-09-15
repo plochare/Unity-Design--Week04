@@ -4,7 +4,7 @@
 
 1. [Unity Mobile App Build](#Unity-Mobile-App-Build-Process)  
 2. [Unity Remote](#Unity-Remote)  
-3. [Cross-Platform UI](#Cross-Platform-UI  
+3. [Cross-Platform UI](#Cross-Platform-UI)
 4. [Unity Multiplayer with Netcode for GameObjects](#Unity-Multiplayer-Netcode)  
 5. [Class Assignment - Week #04](#Create-with-Code)  
 
