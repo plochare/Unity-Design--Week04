@@ -2,11 +2,232 @@
 
 ## Agenda
 
+7. [Animator Controllers / Mixamo](#Animator-Controller)
+8. [Cinemachine](#Cinemachine)
+
 1. [Unity Mobile App Build](#Unity-Mobile-App-Build-Process)  
 2. [Unity Remote](#Unity-Remote)  
 3. [Cross-Platform UI](#Cross-Platform-UI)
 4. [Unity Multiplayer with Netcode for GameObjects](#Unity-Multiplayer-Netcode)  
 5. [Class Assignment - Week #04](#Create-with-Code)  
+
+
+---
+
+# 🎬 Unity Animation System & Mixamo Integration
+
+Animating characters brings your Unity projects to life.  
+This guide covers **Unity’s Animation System** and provides a **hands-on workflow to import Mixamo animations**.
+
+---
+
+## 📌 What is the Unity Animation System?
+
+The **Unity Animation System** allows you to animate characters and objects using:
+
+- **Keyframe Animation**: Manual animation inside Unity.
+- **Imported Animations**: From tools like Mixamo, Blender, or Maya.
+- **Animator Controller**: A state machine that manages multiple animations and transitions.
+
+### Key Concepts
+
+| Concept | Description |
+|---------|-------------|
+| **Animator Component** | Attaches to a GameObject to control animations. |
+| **Animation Clip** | A single animation sequence (e.g., walk, run, jump). |
+| **Animator Controller** | Organizes animation clips in states and transitions. |
+| **Blend Trees** | Smoothly blend between multiple animations based on parameters. |
+| **Root Motion** | Moves the GameObject in world space according to the animation. |
+
+---
+
+## ⚙️ Unity Animator Setup
+
+1. **Add Animator Component**
+   - Select your character in the **Hierarchy**.
+   - Click **Add Component → Animator**.
+   - Create or assign an **Animator Controller**.
+
+2. **Open Animator Controller**
+   - Double-click the Animator Controller in **Project Window**.
+   - Add states by dragging animation clips into the Animator.
+   - Define **transitions** between states based on conditions like speed or triggers.
+
+---
+
+## 🌐 Using Mixamo Animations in Unity
+
+**Mixamo** provides free rigged characters and pre-made animations. Follow these steps to integrate Mixamo animations into Unity.
+
+### Step 1: Choose or Upload Character
+1. Go to [Mixamo.com](https://www.mixamo.com/).
+2. Select a character from the library or upload your own rigged character.
+
+### Step 2: Pick Animations
+1. Search for the desired animation (walk, run, jump, attack, etc.).
+2. Click the animation to preview it in the Mixamo viewer.
+
+### Step 3: Download Animation
+1. Click **Download**.
+2. Choose **FBX for Unity**.
+3. Set **Pose → T-Pose**.
+4. Choose **With Skin** (for full character) or **Without Skin** (if adding only animation).
+
+### Step 4: Import into Unity
+1. Drag the downloaded FBX into **Assets** in Unity.
+2. Select the FBX file, go to **Rig** tab, and set:
+   - **Animation Type → Humanoid**
+   - Click **Apply**.
+3. Unity automatically generates **Animation Clips** from the FBX.
+
+### Step 5: Configure Animator Controller
+1. Open your **Animator Controller**.
+2. Drag the imported Animation Clips into the Animator window.
+3. Create **transitions** between animations.
+   - Example: Idle → Walk → Run
+4. Add **parameters**:
+   - Float: `Speed` for movement
+   - Trigger: `Jump` for jump animation
+
+### Step 6: Enable Root Motion (Optional)
+- If the animation moves the character in world space (e.g., walking forward), check **Apply Root Motion** in the Animator.
+
+---
+
+## 🛠️ Controlling Animations via Script
+
+```csharp
+using UnityEngine;
+
+public class CharacterController : MonoBehaviour
+{
+    public Animator animator;
+
+    void Update()
+    {
+        float move = Input.GetAxis("Vertical");
+        animator.SetFloat("Speed", move);
+
+        if (Input.GetButtonDown("Jump"))
+        {
+            animator.SetTrigger("Jump");
+        }
+    }
+}
+```
+
+---
+
+## 📌 Getting Started: Animator Controller
+https://learn.unity.com/course/introduction-to-3d-animation-systems/unit/the-animator
+
+---
+
+# 🎥 Unity Cinemachine
+
+**Unity Cinemachine** is a powerful camera system that allows you to create dynamic, procedural, and cinematic camera behavior without writing complex code.  
+
+---
+
+## 📌 What is Cinemachine?
+
+Cinemachine is Unity’s advanced camera system, providing:
+
+- **Dynamic Camera Movement**: Automatically follows characters, objects, or paths.
+- **Procedural Camera Control**: Adjusts framing, zoom, and rotation based on target behavior.
+- **Cinematic Shots**: Supports cutscenes, smooth transitions, and complex camera rigs.
+
+Cinemachine works alongside Unity’s **Timeline** for cinematic sequences.
+
+---
+
+## ⚙️ Installing Cinemachine
+
+1. Open **Unity Package Manager** (`Window → Package Manager`).
+2. Search for **Cinemachine**.
+3. Click **Install**.
+4. After installation, you can access Cinemachine via `GameObject → Cinemachine`.
+
+---
+
+## 🔑 Core Components
+
+| Component | Description |
+|-----------|-------------|
+| **Cinemachine Virtual Camera** | A camera that follows or looks at targets. Can be blended with other cameras. |
+| **Cinemachine Brain** | Attached to the main Unity Camera to interpret virtual cameras. |
+| **Cinemachine FreeLook** | A 3D orbiting camera, ideal for third-person perspectives. |
+| **Cinemachine Dolly Track** | Creates cameras that follow a predefined path. |
+| **Cinemachine ClearShot** | Automatically switches between multiple virtual cameras based on priority and visibility. |
+
+---
+
+## 🛠️ Creating a Basic Camera Setup
+
+1. **Add Main Camera** (if none exists) and ensure it has a **Cinemachine Brain** component.
+2. **Create a Virtual Camera**:
+   - `GameObject → Cinemachine → Create Virtual Camera`
+   - Assign a **Target** (e.g., the player character).
+3. Adjust **Follow** and **Look At** fields:
+   - **Follow**: the object the camera moves with.
+   - **Look At**: the object the camera points at.
+4. Play the scene to see the camera follow and track the target dynamically.
+
+---
+
+## 🎯 FreeLook Camera for Third-Person
+
+- Create a FreeLook camera: `GameObject → Cinemachine → FreeLook Camera`.
+- Set the **Follow** and **Look At** targets.
+- Adjust **Rig Settings**:
+  - **Top Rig / Middle Rig / Bottom Rig**: Control height and radius of orbits.
+  - **Axis Control**: Adjust speed and responsiveness.
+- Ideal for games like third-person adventure, platformers, and RPGs.
+
+---
+
+## 🎬 Dolly Tracks & Cinematics
+
+1. Create a **Cinemachine Dolly Track**: `GameObject → Cinemachine → Dolly Track with Cart`.
+2. Place **Waypoints** along the path.
+3. Assign **Virtual Camera** to the **Dolly Cart**.
+4. Animate the cart using **Timeline** for cinematic sequences or cutscenes.
+
+---
+
+## 📜 Sample Script Control
+
+You can switch cameras dynamically with C#:
+
+```csharp
+using UnityEngine;
+using Cinemachine;
+
+public class CameraSwitcher : MonoBehaviour
+{
+    public CinemachineVirtualCamera cam1;
+    public CinemachineVirtualCamera cam2;
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            cam1.Priority = 10;
+            cam2.Priority = 0;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            cam1.Priority = 0;
+            cam2.Priority = 10;
+        }
+    }
+}
+```
+
+---
+
+## 📌 Getting Started: Cinemachine Tutorial
+https://learn.unity.com/tutorial/cinemachine-cameras-2018
 
 ---
 
