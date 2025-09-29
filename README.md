@@ -13,6 +13,7 @@
 9. [Class Assignment - Week #04](#Create-with-Code)  
 
 ---
+
 # 🎬 Unity Video Player 
 
 A hands-on guide for using Unity’s **Video Player** component will help you import videos, configure the Video Player, and render clips as full-screen cutscenes or in-world displays.
@@ -903,5 +904,7 @@ The Interactive Guide to Cross-Platform UI is a set of guided, in-editor tutoria
 
 --- 
 
-
+## 📌 Assignment Week #4 - Unit 1 Player Control - Apply Media Elements + Convert to Mobile App version
+- Create a duplicate scene for mobile version of the game. Add on to thesample driving game prototype with video, audio, lighting and/or particle effects. Modify UI and create mobile app version.
+- https://learn.unity.com/project/unit-1-driving-simulation?uv=6&courseId=5cf96c41edbc2a2ca6e8810f
 
