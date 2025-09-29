@@ -21,6 +21,8 @@ A hands-on guide for using Unity’s **Video Player** component will help you im
 ---
 
 ## 🧰 Step 1: Importing a Video
+- Test Video File
+- https://test-videos.co.uk/bigbuckbunny/mp4-h264
 1. Drag your video file into the Unity **Assets** folder.  
 2. Select the video asset and review import settings in the **Inspector**:  
    - ✅ **Transcode**: Ensures platform compatibility (recommended).  
