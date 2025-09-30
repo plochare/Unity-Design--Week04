@@ -2,7 +2,6 @@
 
 ## Agenda
 
-Instantiate Prefabs
 1. [Lifecycle of Unity Frame](#Life-Cycle-Frame-Methods)
 2. [Scene Management](#Scene-Management)
 3. [Key Input / MouseInput](#Key-Mouse-Input)
