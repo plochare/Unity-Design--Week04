@@ -2,14 +2,6 @@
 
 ## Agenda
 
-Lifecycle of Unity Frame Methods
-
-Scene Management
-
-KeyInput / MouseInput - Has to on Update
-
-Random Numbers 
-
 Instantiate Prefabs
 1. [Lifecycle of Unity Frame](#Life-Cycle-Frame-Methods)
 2. [Scene Management](#Scene-Management)
@@ -22,27 +14,426 @@ Instantiate Prefabs
 9. [Class Assignment - Week #04](#Create-with-Code)  
 
 ---
-# 🧱 Lifecycle of Unity Frame
+# 🧱 Lifecycle of Unity Frame Events
 
-- **Lifecycle Diagram**:  
+- **Unity Event Functions Diagram**:  
 
 ![Unity Lifecycle](images/LifecycleUnity.png)
 
 ---
 
-# 🧱 Scene Management
+# Unity Scene Management
+
+Scene Management in Unity is the system that controls loading, unloading, and transitioning between different game levels or environments. Scenes are containers for your game’s objects, lighting, UI, and gameplay logic. By mastering scene management, you can build structured projects, create menus, and implement smooth level transitions.
 
 ---
 
-# 🧱 Key Input & Mouse Input
+## 📖 What is a Scene in Unity?
+
+A **Scene** in Unity is like a stage or level of your game. It holds:
+
+* GameObjects (characters, environments, UI, etc.)
+* Components (scripts, physics, colliders, etc.)
+* Lighting & rendering data
+* Navigation and baked data
+
+Every Unity project starts with a default scene, but you can create as many scenes as needed to organize your game.
 
 ---
 
-# 🧱 Random Range
+## ⚙️ Scene Management API
+
+Unity provides the **`UnityEngine.SceneManagement`** namespace to handle scene operations.
+
+### Importing
+
+```csharp
+using UnityEngine.SceneManagement;
+```
+
+### Common Functions
+
+* **Load a Scene by Name**
+
+  ```csharp
+  SceneManager.LoadScene("Level1");
+  ```
+* **Load a Scene by Build Index**
+
+  ```csharp
+  SceneManager.LoadScene(1);
+  ```
+* **Load Additively (keep current scene active)**
+
+  ```csharp
+  SceneManager.LoadScene("UIOverlay", LoadSceneMode.Additive);
+  ```
+* **Unload a Scene**
+
+  ```csharp
+  SceneManager.UnloadSceneAsync("UIOverlay");
+  ```
+* **Get the Active Scene**
+
+  ```csharp
+  Scene activeScene = SceneManager.GetActiveScene();
+  Debug.Log("Current Scene: " + activeScene.name);
+  ```
+  
+---
+
+## 🎮 Example: Level Transition Script
+
+```csharp
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class SceneController : MonoBehaviour
+{
+    public void LoadLevel(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName);
+    }
+
+}
+```
+
+Attach this script to a UI button to handle menu navigation.
 
 ---
 
-# 🧱 Instantiate Prefab
+# Unity Key & Mouse Input in `Update()`
+
+Handling **player input** is a core part of gameplay in Unity. Using the `Update()` frame event, you can check for **keyboard keys** and **mouse clicks** each frame. This allows you to implement movement, shooting, menu navigation, and other interactions.
+
+---
+
+## 🔄 Why Use `Update()` for Input?
+
+The `Update()` method runs **once per frame**, making it ideal for checking input events in real time. Unity’s Input system captures key presses and mouse activity, which you can query inside `Update()`.
+
+---
+
+## ⌨️ Keyboard Input
+
+Unity provides several ways to detect keyboard keys using the `Input` class.
+
+### Common Methods
+
+* **`Input.GetKey`** – returns `true` while the key is held down.
+* **`Input.GetKeyDown`** – returns `true` only in the frame the key is pressed.
+* **`Input.GetKeyUp`** – returns `true` only in the frame the key is released.
+
+### Example
+
+```csharp
+using UnityEngine;
+
+public class PlayerController : MonoBehaviour
+{
+    void Update()
+    {
+        // Move left and right
+        if (Input.GetKey(KeyCode.A))
+            transform.Translate(Vector3.left * Time.deltaTime);
+
+        if (Input.GetKey(KeyCode.D))
+            transform.Translate(Vector3.right * Time.deltaTime);
+
+        // Jump (triggered once on key press)
+        if (Input.GetKeyDown(KeyCode.Space))
+            Debug.Log("Jump!");
+
+        // Quit (triggered once on release)
+        if (Input.GetKeyUp(KeyCode.Escape))
+            Application.Quit();
+    }
+}
+```
+
+---
+
+## 🖱️ Mouse Input
+
+Mouse input works the same way, with additional support for button clicks and cursor position.
+
+### Mouse Buttons
+
+* `0` → Left button
+* `1` → Right button
+* `2` → Middle button
+
+### Example
+
+```csharp
+void Update()
+{
+    // Left click (pressed down this frame)
+    if (Input.GetMouseButtonDown(0))
+        Debug.Log("Left Mouse Button Clicked");
+
+    // Hold right button
+    if (Input.GetMouseButton(1))
+        Debug.Log("Right Mouse Button Held");
+
+    // Release middle button
+    if (Input.GetMouseButtonUp(2))
+        Debug.Log("Middle Mouse Button Released");
+
+    // Mouse position in screen space
+    Vector3 mousePos = Input.mousePosition;
+    Debug.Log("Mouse Position: " + mousePos);
+}
+```
+
+---
+
+## 🎮 Example: Simple Character Controller
+
+```csharp
+using UnityEngine;
+
+public class SimpleController : MonoBehaviour
+{
+    public float moveSpeed = 5f;
+
+    void Update()
+    {
+        float moveX = 0f;
+
+        if (Input.GetKey(KeyCode.A))
+            moveX = -1f;
+        else if (Input.GetKey(KeyCode.D))
+            moveX = 1f;
+
+        transform.Translate(new Vector3(moveX, 0, 0) * moveSpeed * Time.deltaTime);
+
+        if (Input.GetMouseButtonDown(0))
+            Debug.Log("Player attacked!");
+    }
+}
+```
+
+---
+
+# Unity `Random.Range`
+
+Randomness is essential in game development for creating variety, unpredictability, and replayability. Unity provides the **`Random.Range`** method to generate random numbers for positions, rotations, loot drops, AI behavior, and more.
+
+---
+
+## 🎲 What is `Random.Range`?
+
+`Random.Range` is part of the **`UnityEngine`** namespace. It returns a random number between two specified values.
+
+### Syntax
+
+```csharp
+float value = Random.Range(min, max);   // Random float between min [inclusive] and max [inclusive]
+int value = Random.Range(min, max);     // Random int between min [inclusive] and max [exclusive]
+```
+
+---
+
+## 🔢 Using Random with Floats
+
+When using **floats**, the range is **inclusive** on both ends.
+
+```csharp
+void Update()
+{
+    // Random speed between 1.0 and 5.0
+    float randomSpeed = Random.Range(1f, 5f);
+    Debug.Log("Random Speed: " + randomSpeed);
+}
+```
+
+* Returns values like `1.0`, `2.73`, `4.99`, or even `5.0`.
+
+---
+
+## 🔢 Using Random with Integers
+
+When using **integers**, the **minimum is inclusive** but the **maximum is exclusive**.
+
+```csharp
+void Start()
+{
+    // Picks a number from 1, 2, or 3 (never 4)
+    int randomChoice = Random.Range(1, 4);
+    Debug.Log("Random Choice: " + randomChoice);
+}
+```
+
+* Useful for dice rolls, selecting random array indices, or choosing random options.
+
+---
+
+## 🎮 Example Use Cases
+
+### 1. Random Position
+
+```csharp
+Vector3 randomPos = new Vector3(
+    Random.Range(-10f, 10f),
+    0f,
+    Random.Range(-10f, 10f)
+);
+transform.position = randomPos;
+```
+
+Places the object at a random position within a square area.
+
+---
+
+### 2. Random Enemy Spawn
+
+```csharp
+public GameObject[] enemies;
+
+void SpawnEnemy()
+{
+    int index = Random.Range(0, enemies.Length);
+    Instantiate(enemies[index], transform.position, Quaternion.identity);
+}
+```
+
+Chooses a random enemy prefab to spawn.
+
+---
+
+### 3. Randomized Loot Drop Chance
+
+```csharp
+void DropLoot()
+{
+    float chance = Random.Range(0f, 1f);
+    if (chance < 0.25f)
+        Debug.Log("Rare Item Dropped!");
+    else
+        Debug.Log("Common Item Dropped!");
+}
+```
+
+Gives a **25% chance** to drop a rare item.
+
+---
+
+# Instantiate Prefabs
+
+In Unity, **prefabs** are reusable GameObject templates. The **`Instantiate()`** method allows you to create clones of prefabs at runtime, enabling dynamic spawning of enemies, bullets, items, UI elements, and more.
+
+---
+
+## 🧩 What is a Prefab?
+
+A **Prefab** is a saved GameObject asset in your Unity project that stores:
+
+* Meshes, sprites, or UI elements
+* Components (scripts, colliders, physics, etc.)
+* Property values and child objects
+
+They serve as **blueprints** that can be reused and instantiated multiple times in a scene.
+
+---
+
+## ⚙️ Instantiating a Prefab
+
+### Syntax
+
+```csharp
+Object Instantiate(Object original);
+Object Instantiate(Object original, Vector3 position, Quaternion rotation);
+Object Instantiate(Object original, Transform parent);
+```
+
+---
+
+## 🎮 Example: Basic Instantiation
+
+```csharp
+using UnityEngine;
+
+public class Spawner : MonoBehaviour
+{
+    public GameObject prefab; // Assign in Inspector
+
+    void Start()
+    {
+        // Spawn prefab at origin
+        Instantiate(prefab);
+    }
+}
+```
+
+---
+
+## 📍 Instantiating with Position & Rotation
+
+```csharp
+public class Spawner : MonoBehaviour
+{
+    public GameObject prefab;
+
+    void SpawnAtPoint()
+    {
+        Vector3 spawnPos = new Vector3(0, 1, 0);
+        Quaternion spawnRot = Quaternion.identity;
+
+        Instantiate(prefab, spawnPos, spawnRot);
+    }
+}
+```
+
+* `Quaternion.identity` → default rotation (no rotation).
+
+---
+
+## 🌳 Parenting Instantiated Objects
+
+```csharp
+public Transform parentObject;
+
+void SpawnAsChild()
+{
+    Instantiate(prefab, parentObject);
+}
+```
+
+Useful for organizing objects under a hierarchy (e.g., bullets under a "BulletContainer").
+
+---
+
+## 🔁 Runtime Examples
+
+### 1. Enemy Spawner
+
+```csharp
+public GameObject enemyPrefab;
+
+void Update()
+{
+    if (Input.GetKeyDown(KeyCode.Space))
+    {
+        Vector3 randomPos = new Vector3(Random.Range(-5f, 5f), 0, Random.Range(-5f, 5f));
+        Instantiate(enemyPrefab, randomPos, Quaternion.identity);
+    }
+}
+```
+
+---
+
+### 2. Shooting Projectiles
+
+```csharp
+public GameObject bulletPrefab;
+public Transform firePoint;
+
+void Shoot()
+{
+    Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+}
+```
 
 ---
 
@@ -397,7 +788,7 @@ Here’s a simplified workflow to follow:
 
 ---
 
-## 📌 Assignment Week #4 - Unit 1 Player Control - Apply Media Elements + Convert to Mobile App version
-- Create a duplicate scene for mobile version of the game. Add on to thesample driving game prototype with video, audio, lighting and/or particle effects. Modify UI and create mobile app version.
+## 📌 Assignment Week #4 - Unit 1 Player Control - Apply Media Elements 
+- Create a duplicate scene for mobile version of the game. Add on to thesample driving game prototype with video, audio, and/or particle effects. 
 - https://learn.unity.com/project/unit-1-driving-simulation?uv=6&courseId=5cf96c41edbc2a2ca6e8810f
 
